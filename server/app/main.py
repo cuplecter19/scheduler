@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sqlite3
 from contextlib import asynccontextmanager
@@ -15,7 +16,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
 
-DATABASE_URL = str(Path(os.getenv('SCHEDULER_DB', 'scheduler_sync.sqlite3')))
+DATABASE_URL = str(Path(os.getenv('SCHEDULER_DB')).expanduser() if os.getenv('SCHEDULER_DB') else Path(__file__).resolve().parents[1] / 'scheduler_sync.sqlite3')
+logger = logging.getLogger(__name__)
 JWT_SECRET = os.getenv('SCHEDULER_JWT_SECRET')
 JWT_ALGORITHM = 'HS256'
 TOKEN_EXPIRE_DAYS = 30
@@ -30,7 +32,10 @@ async def lifespan(_: FastAPI):
 
 def cors_origins() -> list[str]:
     value = os.getenv('SCHEDULER_CORS_ORIGINS', '')
-    return [origin.strip() for origin in value.split(',') if origin.strip()]
+    origins = [origin.strip() for origin in value.split(',') if origin.strip()]
+    if not origins:
+        logger.warning('SCHEDULER_CORS_ORIGINS is empty; browser clients will be blocked by CORS')
+    return origins
 
 
 app = FastAPI(title='Structured Scheduler Sync API', version='0.1.0', lifespan=lifespan)

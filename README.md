@@ -49,7 +49,7 @@ cd server
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
-export SCHEDULER_JWT_SECRET='REPLACE_WITH_RANDOM_SECRET_AT_LEAST_32_CHARS'
+export SCHEDULER_JWT_SECRET=REPLACE_WITH_RANDOM_SECRET_AT_LEAST_32_CHARS
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 

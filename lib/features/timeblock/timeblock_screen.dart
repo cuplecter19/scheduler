@@ -257,10 +257,10 @@ Future<void> showBlockEditor(BuildContext context, AppState state, {TimeBlock? b
                 onPressed: () async {
                   if (title.text.trim().isEmpty) return;
                   if (end.isBefore(start) || end.isAtSameMomentAs(start)) {
-                    end = start.add(_minimumBlockDuration);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('종료 시간이 시작 시간 이후가 되도록 30분 뒤로 조정했습니다.')),
+                      const SnackBar(content: Text('종료 시간은 시작 시간 이후여야 합니다.')),
                     );
+                    return;
                   }
                   await state.saveBlock(TimeBlock(
                     id: block?.id ?? state.newId(),

@@ -14,7 +14,7 @@ class SyncEngine {
   final AppDatabase _database;
   bool _isSyncing = false;
 
-  Future<String> get serverUrl async => await _database.getSetting(_serverUrlKey) ?? 'http://127.0.0.1:8000';
+  Future<String> get serverUrl async => await _database.getSetting(_serverUrlKey) ?? '';
   Future<String?> get email async => _database.getSetting(_emailKey);
   Future<DateTime?> get lastSyncAt async {
     final value = await _database.getSetting(_lastSyncKey);
@@ -24,13 +24,17 @@ class SyncEngine {
   Future<void> setServerUrl(String url) async => _database.setSetting(_serverUrlKey, url.trim());
 
   Future<void> register(String email, String password) async {
-    final client = SyncClient(baseUrl: await serverUrl);
+    final url = await serverUrl;
+    if (url.isEmpty) throw const SyncException('서버 URL을 먼저 설정하세요.');
+    final client = SyncClient(baseUrl: url);
     final session = await client.register(email, password);
     await _saveSession(session);
   }
 
   Future<void> login(String email, String password) async {
-    final client = SyncClient(baseUrl: await serverUrl);
+    final url = await serverUrl;
+    if (url.isEmpty) throw const SyncException('서버 URL을 먼저 설정하세요.');
+    final client = SyncClient(baseUrl: url);
     final session = await client.login(email, password);
     await _saveSession(session);
   }
@@ -46,7 +50,9 @@ class SyncEngine {
     try {
       final token = await _database.getSetting(_tokenKey);
       if (token == null || token.isEmpty) return '로그인이 필요합니다.';
-      final client = SyncClient(baseUrl: await serverUrl);
+      final url = await serverUrl;
+      if (url.isEmpty) return '서버 URL을 먼저 설정하세요.';
+      final client = SyncClient(baseUrl: url);
       final since = await lastSyncAt;
       final changes = await _database.getChangedRows(since);
       final pushedAt = await client.push(token: token, changes: changes);

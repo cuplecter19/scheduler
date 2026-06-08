@@ -26,7 +26,9 @@ server/app/           FastAPI + SQLite + JWT 동기화 백엔드
 
 ## Flutter 앱 실행
 
-> 현재 작업 환경에는 Flutter SDK가 없어 빌드 검증은 수행하지 못했습니다. Flutter가 설치된 Windows 개발 머신에서 아래 명령으로 플랫폼 파일을 생성/갱신하고 빌드하세요.
+필요 버전: Flutter SDK 3.19 이상(Dart 3.3 이상).
+
+> 현재 작업 환경에는 Flutter SDK가 없어 아래 Flutter 빌드 명령은 검증하지 못했습니다. 실제 Flutter 설치 환경에 따라 Android SDK/Visual Studio Windows Desktop 워크로드 등 추가 설정이 필요할 수 있습니다.
 
 ```bash
 flutter create --platforms=android,windows .
@@ -38,7 +40,7 @@ flutter build windows
 flutter build apk --release
 ```
 
-Android 에뮬레이터에서 로컬 PC 서버에 접속하려면 앱 설정의 서버 URL을 `http://10.0.2.2:8000`으로 입력합니다. 실제 기기에서는 PC 또는 서버의 LAN/공인 IP를 사용합니다.
+Android 에뮬레이터에서 로컬 PC 서버에 접속하려면 앱 설정의 서버 URL을 `http://10.0.2.2:8000`으로 입력합니다. 실제 기기에서는 PC 또는 서버의 LAN/공인 IP를 사용합니다. 앱은 기본 서버 URL을 제공하지 않으므로 설정 화면에서 명시적으로 입력해야 합니다.
 
 ## FastAPI 서버 로컬 실행
 
@@ -103,6 +105,7 @@ pip install -r requirements.txt
 sudo tee /etc/structured-clone.env >/dev/null <<'ENV'
 SCHEDULER_DB=/opt/structured-clone/server/scheduler_sync.sqlite3
 SCHEDULER_JWT_SECRET=REPLACE_WITH_RANDOM_SECRET_AT_LEAST_32_CHARS
+# 프로덕션에서는 앱/웹 클라이언트가 접근할 실제 HTTPS Origin을 명시합니다.
 SCHEDULER_CORS_ORIGINS=https://<YOUR_DOMAIN>
 ENV
 ```

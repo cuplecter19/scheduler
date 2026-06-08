@@ -256,7 +256,12 @@ Future<void> showBlockEditor(BuildContext context, AppState state, {TimeBlock? b
               FilledButton(
                 onPressed: () async {
                   if (title.text.trim().isEmpty) return;
-                  if (end.isBefore(start) || end.isAtSameMomentAs(start)) end = start.add(_minimumBlockDuration);
+                  if (end.isBefore(start) || end.isAtSameMomentAs(start)) {
+                    end = start.add(_minimumBlockDuration);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('종료 시간이 시작 시간 이후가 되도록 30분 뒤로 조정했습니다.')),
+                    );
+                  }
                   await state.saveBlock(TimeBlock(
                     id: block?.id ?? state.newId(),
                     title: title.text.trim(),

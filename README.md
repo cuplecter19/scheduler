@@ -47,7 +47,7 @@ cd server
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
-export SCHEDULER_JWT_SECRET='충분히-긴-랜덤-문자열'
+export SCHEDULER_JWT_SECRET='REPLACE_WITH_RANDOM_SECRET_AT_LEAST_32_CHARS'
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
@@ -102,8 +102,8 @@ pip install -r requirements.txt
 ```bash
 sudo tee /etc/structured-clone.env >/dev/null <<'ENV'
 SCHEDULER_DB=/opt/structured-clone/server/scheduler_sync.sqlite3
-SCHEDULER_JWT_SECRET=반드시-랜덤한-긴-비밀값으로-교체
-SCHEDULER_CORS_ORIGINS=*
+SCHEDULER_JWT_SECRET=REPLACE_WITH_RANDOM_SECRET_AT_LEAST_32_CHARS
+SCHEDULER_CORS_ORIGINS=https://<YOUR_DOMAIN>
 ENV
 ```
 

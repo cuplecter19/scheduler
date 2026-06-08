@@ -76,10 +76,13 @@ class SyncClient {
     return DateTime.parse(body['server_time'] as String).toLocal();
   }
 
-  Map<String, String> _headers(String token) => <String, String>{
-        'content-type': 'application/json',
-        'authorization': 'Bearer ' + token,
-      };
+  Map<String, String> _headers(String token) {
+    const scheme = 'Bearer';
+    return <String, String>{
+      'content-type': 'application/json',
+      'authorization': '$scheme $token',
+    };
+  }
 }
 
 class SyncException implements Exception {

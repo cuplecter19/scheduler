@@ -5,6 +5,8 @@ import '../../core/models/time_block.dart';
 import '../../main.dart';
 import '../../theme/app_colors.dart';
 
+const _minimumBlockDuration = Duration(minutes: 30);
+
 class TimeBlockScreen extends StatefulWidget {
   const TimeBlockScreen({super.key, required this.state});
 
@@ -254,7 +256,7 @@ Future<void> showBlockEditor(BuildContext context, AppState state, {TimeBlock? b
               FilledButton(
                 onPressed: () async {
                   if (title.text.trim().isEmpty) return;
-                  if (!end.isAfter(start)) end = start.add(const Duration(minutes: 30));
+                  if (!end.isAfter(start)) end = start.add(_minimumBlockDuration);
                   await state.saveBlock(TimeBlock(
                     id: block?.id ?? state.newId(),
                     title: title.text.trim(),

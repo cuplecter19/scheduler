@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import sqlite3
+from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -19,10 +20,22 @@ JWT_SECRET = os.getenv('SCHEDULER_JWT_SECRET')
 JWT_ALGORITHM = 'HS256'
 TOKEN_EXPIRE_DAYS = 30
 
-app = FastAPI(title='Structured Clone Sync API', version='0.1.0')
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    init_db()
+    yield
+
+
+def cors_origins() -> list[str]:
+    value = os.getenv('SCHEDULER_CORS_ORIGINS', '')
+    return [origin.strip() for origin in value.split(',') if origin.strip()]
+
+
+app = FastAPI(title='Structured Clone Sync API', version='0.1.0', lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv('SCHEDULER_CORS_ORIGINS', '*').split(','),
+    allow_origins=cors_origins(),
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
@@ -98,11 +111,6 @@ def init_db() -> None:
         conn.execute('CREATE INDEX IF NOT EXISTS idx_records_updated ON records(user_id, updated_at)')
 
 
-@app.on_event('startup')
-def startup() -> None:
-    init_db()
-
-
 def jwt_secret() -> str:
     if not JWT_SECRET or len(JWT_SECRET) < 32:
         raise RuntimeError('SCHEDULER_JWT_SECRET must be set to at least 32 characters')
@@ -118,7 +126,9 @@ def current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) 
     try:
         payload = jwt.decode(credentials.credentials, jwt_secret(), algorithms=[JWT_ALGORITHM])
         user_id = int(payload['sub'])
-    except Exception as exc:  # noqa: BLE001
+    except jwt.ExpiredSignatureError as exc:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token expired') from exc
+    except (jwt.InvalidTokenError, KeyError, ValueError) as exc:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token') from exc
     with connect() as conn:
         user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()

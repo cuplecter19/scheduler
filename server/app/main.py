@@ -15,7 +15,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
 
 DATABASE_URL = Path(os.getenv('SCHEDULER_DB', 'scheduler_sync.sqlite3'))
-JWT_SECRET = os.getenv('SCHEDULER_JWT_SECRET', 'change-this-secret-before-deploy')
+JWT_SECRET = os.getenv('SCHEDULER_JWT_SECRET')
 JWT_ALGORITHM = 'HS256'
 TOKEN_EXPIRE_DAYS = 30
 
@@ -103,14 +103,20 @@ def startup() -> None:
     init_db()
 
 
+def jwt_secret() -> str:
+    if not JWT_SECRET or len(JWT_SECRET) < 32:
+        raise RuntimeError('SCHEDULER_JWT_SECRET must be set to at least 32 characters')
+    return JWT_SECRET
+
+
 def make_token(user_id: int, email: str) -> str:
     expires = utcnow() + timedelta(days=TOKEN_EXPIRE_DAYS)
-    return jwt.encode({'sub': str(user_id), 'email': email, 'exp': expires}, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return jwt.encode({'sub': str(user_id), 'email': email, 'exp': expires}, jwt_secret(), algorithm=JWT_ALGORITHM)
 
 
 def current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> sqlite3.Row:
     try:
-        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(credentials.credentials, jwt_secret(), algorithms=[JWT_ALGORITHM])
         user_id = int(payload['sub'])
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid token') from exc

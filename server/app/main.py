@@ -16,7 +16,9 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
 
-DATABASE_URL = str(Path(os.getenv('SCHEDULER_DB')).expanduser() if os.getenv('SCHEDULER_DB') else Path(__file__).resolve().parents[1] / 'scheduler_sync.sqlite3')
+_database_env = os.getenv('SCHEDULER_DB')
+_database_path = Path(_database_env).expanduser() if _database_env else Path(__file__).resolve().parents[1] / 'scheduler_sync.sqlite3'
+DATABASE_URL = str(_database_path)
 logger = logging.getLogger(__name__)
 JWT_SECRET = os.getenv('SCHEDULER_JWT_SECRET')
 JWT_ALGORITHM = 'HS256'

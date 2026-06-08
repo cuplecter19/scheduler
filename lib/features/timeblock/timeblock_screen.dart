@@ -262,6 +262,12 @@ Future<void> showBlockEditor(BuildContext context, AppState state, {TimeBlock? b
                     );
                     return;
                   }
+                  if (end.difference(start) < _minimumBlockDuration) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('타임블록은 최소 30분 이상이어야 합니다.')),
+                    );
+                    return;
+                  }
                   await state.saveBlock(TimeBlock(
                     id: block?.id ?? state.newId(),
                     title: title.text.trim(),

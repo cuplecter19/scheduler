@@ -23,6 +23,7 @@ TOKEN_EXPIRE_DAYS = 30
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    jwt_secret()
     init_db()
     yield
 

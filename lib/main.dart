@@ -50,7 +50,7 @@ class _StructuredCloneAppState extends State<StructuredCloneApp> {
     return AppScope(
       state: widget.state,
       child: MaterialApp(
-        title: 'Structured Clone Scheduler',
+        title: 'Structured Scheduler',
         debugShowCheckedModeBanner: false,
         theme: buildAppTheme(widget.state.fontScale),
         home: const ShellScreen(),

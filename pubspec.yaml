@@ -1,4 +1,4 @@
-name: structured_clone
+name: structured_scheduler
 version: 0.1.0+1
 description: A Structured-inspired cross-platform scheduler for Windows and Android with offline-first sync.
 publish_to: 'none'

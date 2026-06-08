@@ -1,4 +1,4 @@
-# Structured Clone Scheduler
+# Structured Scheduler
 
 Structured의 핵심 흐름(오늘 할 일, 하루 타임라인, 주간 보기, 오프라인 우선 동기화)을 참고해 만든 Flutter 단일 코드베이스 앱입니다. 색상은 요구사항에 맞게 흰색 + 파란색 팔레트만 사용합니다.
 
@@ -115,7 +115,7 @@ ENV
 ```bash
 sudo tee /etc/systemd/system/structured-clone.service >/dev/null <<'SERVICE'
 [Unit]
-Description=Structured Clone Sync API
+Description=Structured Scheduler Sync API
 After=network.target
 
 [Service]

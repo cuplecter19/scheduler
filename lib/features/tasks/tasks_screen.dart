@@ -143,7 +143,7 @@ class _Pill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(999)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(999)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -182,7 +182,7 @@ Future<void> showTaskEditor(BuildContext context, AppState state, {ScheduledTask
               TextField(controller: tags, decoration: const InputDecoration(labelText: '태그 (쉼표로 구분)')),
               const SizedBox(height: 12),
               DropdownButtonFormField<TaskPriority>(
-                value: priority,
+                initialValue: priority,
                 decoration: const InputDecoration(labelText: '우선순위'),
                 items: TaskPriority.values.map((value) => DropdownMenuItem(value: value, child: Text(_priorityLabel(value)))).toList(),
                 onChanged: (value) => setState(() => priority = value ?? priority),

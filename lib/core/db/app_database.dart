@@ -1,4 +1,4 @@
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common/sqlite_api.dart';
 
 import 'app_database_platform.dart';
 import '../models/scheduled_task.dart';

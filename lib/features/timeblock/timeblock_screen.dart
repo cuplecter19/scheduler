@@ -307,4 +307,4 @@ Future<DateTime> _pickTime(BuildContext context, DateTime value) async {
 
 bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 Color _hexToColor(String hex) => Color(int.parse(hex.replaceFirst('#', '0xff')));
-String _colorToHex(Color color) => '#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
+String _colorToHex(Color color) => '#${color.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';

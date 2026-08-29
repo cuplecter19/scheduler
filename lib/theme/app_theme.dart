@@ -28,10 +28,10 @@ ThemeData buildAppTheme(double fontScale) {
       elevation: 0,
       centerTitle: false,
     ),
-    cardTheme: CardTheme(
+    cardTheme: const CardThemeData(
       color: AppColors.surface,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(22))),
     ),
     dividerTheme: const DividerThemeData(color: AppColors.divider),
     inputDecorationTheme: InputDecorationTheme(

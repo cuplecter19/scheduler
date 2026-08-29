@@ -31,7 +31,7 @@ ThemeData buildAppTheme(double fontScale) {
     cardTheme: const CardThemeData(
       color: AppColors.surface,
       elevation: 0,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(22))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(22))),
     ),
     dividerTheme: const DividerThemeData(color: AppColors.divider),
     inputDecorationTheme: InputDecorationTheme(
@@ -56,7 +56,7 @@ ThemeData buildAppTheme(double fontScale) {
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: AppColors.background,
-      indicatorColor: AppColors.primary.withOpacity(0.14),
+      indicatorColor: AppColors.primary.withValues(alpha: 0.14),
       labelTextStyle: WidgetStateProperty.all(
         const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
       ),

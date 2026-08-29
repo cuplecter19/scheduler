@@ -168,7 +168,7 @@ class _BlockTile extends StatelessWidget {
     final color = _hexToColor(block.colorHex);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(18), border: Border.all(color: color.withOpacity(0.25))),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(18), border: Border.all(color: color.withValues(alpha: 0.25))),
       child: ListTile(
         onTap: () => showBlockEditor(context, state, block: block, day: block.startAt),
         leading: Container(width: 5, height: 42, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(99))),
@@ -205,7 +205,7 @@ Future<void> showBlockEditor(BuildContext context, AppState state, {TimeBlock? b
               TextField(controller: note, decoration: const InputDecoration(labelText: '메모')),
               const SizedBox(height: 12),
               DropdownButtonFormField<String?>(
-                value: taskId,
+                initialValue: taskId,
                 decoration: const InputDecoration(labelText: '연결할 할 일'),
                 items: <DropdownMenuItem<String?>>[
                   const DropdownMenuItem(value: null, child: Text('연결 없음')),
@@ -307,4 +307,4 @@ Future<DateTime> _pickTime(BuildContext context, DateTime value) async {
 
 bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 Color _hexToColor(String hex) => Color(int.parse(hex.replaceFirst('#', '0xff')));
-String _colorToHex(Color color) => '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+String _colorToHex(Color color) => '#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';

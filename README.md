@@ -33,12 +33,16 @@ server/app/           FastAPI + SQLite + JWT 동기화 백엔드
 ```bash
 flutter create --platforms=android,windows .
 flutter pub get
+dart run sqflite_common_ffi_web:setup --force
 flutter analyze
 flutter test
+flutter run -d chrome
 flutter run -d windows
 flutter build windows
 flutter build apk --release
 ```
+
+웹 실행(`flutter run -d chrome`)은 로컬 SQLite를 위해 `web/sqflite_sw.js`와 `web/sqlite3.wasm`이 필요합니다. 의존성을 갱신한 뒤 같은 오류가 다시 발생하면 `dart run sqflite_common_ffi_web:setup --force`를 실행해 해당 파일을 다시 생성하세요.
 
 Android 에뮬레이터에서 로컬 PC 서버에 접속하려면 앱 설정의 서버 URL을 `http://10.0.2.2:8000`으로 입력합니다. 실제 기기에서는 PC 또는 서버의 LAN/공인 IP를 사용합니다. 앱은 기본 서버 URL을 제공하지 않으므로 설정 화면에서 명시적으로 입력해야 합니다.
 

@@ -1,0 +1,11 @@
+{
+  "name": "Structured Scheduler",
+  "short_name": "Scheduler",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0D47A1",
+  "description": "A Structured-inspired cross-platform scheduler.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false
+}

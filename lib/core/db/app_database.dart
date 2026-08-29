@@ -1,9 +1,6 @@
-import 'dart:io';
+import 'package:sqflite_common/sqlite_api.dart';
 
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
+import 'app_database_platform.dart';
 import '../models/scheduled_task.dart';
 import '../models/sync_change.dart';
 import '../models/time_block.dart';
@@ -14,15 +11,8 @@ class AppDatabase {
   final Database _db;
 
   static Future<AppDatabase> open() async {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-
-    final dir = await getApplicationDocumentsDirectory();
-    final path = p.join(dir.path, 'structured_clone.db');
-    final db = await databaseFactory.openDatabase(
-      path,
+    final db = await openPlatformDatabase(
+      'structured_clone.db',
       options: OpenDatabaseOptions(
         version: 1,
         onCreate: (db, version) async {

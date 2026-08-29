@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-DatabaseFactory? _databaseFactory;
+late final DatabaseFactory _databaseFactory = _createDatabaseFactory();
 
 Future<Database> openPlatformDatabase(
   String fileName, {
@@ -14,19 +14,14 @@ Future<Database> openPlatformDatabase(
 }) async {
   final dir = await getApplicationDocumentsDirectory();
   final path = p.join(dir.path, fileName);
-  return _resolveDatabaseFactory().openDatabase(path, options: options);
+  return _databaseFactory.openDatabase(path, options: options);
 }
 
-DatabaseFactory _resolveDatabaseFactory() {
-  final existingFactory = _databaseFactory;
-  if (existingFactory != null) {
-    return existingFactory;
-  }
-
+DatabaseFactory _createDatabaseFactory() {
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     sqfliteFfiInit();
-    return _databaseFactory = databaseFactoryFfi;
+    return databaseFactoryFfi;
   }
 
-  return _databaseFactory = sqflite.databaseFactory;
+  return sqflite.databaseFactory;
 }
